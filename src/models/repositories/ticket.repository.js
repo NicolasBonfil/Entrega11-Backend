@@ -8,17 +8,6 @@ class TicketRepository{
         try {
             return await ticketDao.createTicket(email, amount)
         } catch (error) {
-            const ticket = await ticketDao.getTicket(code)
-            if(ticket){
-                customError.createError({
-                    name: "Error al crear el ticket",
-                    cause: existingTicket(code),
-                    message: "Ya existe un ticket con ese codigo",
-                    code: EError.NOT_FOUND
-                })
-            }
-
-
             if(!email){
                 customError.createError({
                     name: "Error al crear el ticket",
@@ -33,15 +22,6 @@ class TicketRepository{
                     name: "Error al crear el ticket",
                     cause: missingDataError("Precio total"),
                     message: "La informacion del precio total no esta completa",
-                    code: EError.INVALID_TYPES_ERROR
-                })
-            }
-
-            if(!code){
-                customError.createError({
-                    name: "Error al crear el ticket",
-                    cause: missingDataError("Codigo del ticket"),
-                    message: "La informacion del codigo del ticket no esta completa",
                     code: EError.INVALID_TYPES_ERROR
                 })
             }
@@ -62,7 +42,7 @@ class TicketRepository{
         } catch (error) {
             customError.createError({
                 name: "Error al obtener los tickets",
-                cause: dataBaseError(Error),
+                cause: dataBaseError(error),
                 message: error.message,
                 code: EError.DATABASE_ERROR
             })

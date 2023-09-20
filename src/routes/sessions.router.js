@@ -107,8 +107,7 @@ router.post("/logout", (req, res, next) => {
 
 router.get("/current", authMid, async (req, res) => {
     const user = req.user
-    res.send(user)
-    //res.render("current", {user})
+    res.render("current", {user})
 })
 
 export default router

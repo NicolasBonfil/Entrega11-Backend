@@ -11,6 +11,8 @@ import appRouter from "./routes/app.router.js"
 import initializePassport from "./config/passport.config.js"
 import CONFIG from "./config/config.js"
 import errorMiddle from "./middlewares/indexControlError.js"
+import { addLogger } from "./utils/logger.js"
+import session from "express-session"
 
 
 const app = express()
@@ -37,13 +39,14 @@ app.set("view engine", "handlebars")
 
 app.use(cookieParser())
 app.use(errorMiddle)
+app.use(addLogger)
 
 app.use("/api", appRouter)
 app.use("/", viewRouter)
 
 initializePassport(passport)
 app.use(passport.initialize())
-app.use(passport.session({
+app.use(session({
     // store: MongoStore.create({
     //     mongoUrl: "mongodb+srv://bonfilnico:12345@pruebacoder.q69nl8a.mongodb.net/?retryWrites=true&w=majority",
     //     mongoOptions: {useNewUrlParser: true, useUnifiedTopology: true},
@@ -53,11 +56,6 @@ app.use(passport.session({
     resave: false,
     saveUninitialized: true
 }))
-
-
-// app.use(session({
-//     secret: "SecretCoders"
-// }))
 
 const httpserver = app.listen(PORT, () => console.log("Server arriba"))
 const socketServer = new Server(httpserver)

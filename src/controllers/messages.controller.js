@@ -9,6 +9,7 @@ class MessageController{
             const response = successResponse(result)
             res.status(HTTP_STATUS.OK).send(response)
         } catch (error) {
+            req.logger.error(error.message)
            next(error)
         }
     }
@@ -22,6 +23,7 @@ class MessageController{
             const response = successResponse(newMessage)
             res.status(HTTP_STATUS.OK).send(response)
         } catch (error) {
+            req.logger.error(error.message)
             next(error)
         }
     }

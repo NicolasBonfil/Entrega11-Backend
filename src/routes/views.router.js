@@ -30,6 +30,20 @@ router.get("/products", async (req, res) => {
     })
 })
 
+
+router.get("/loggerTest", (req, res) => {
+    console.log("loggers");
+    
+    req.logger.debug("debug")
+    req.logger.http("http")
+    req.logger.info("info")
+    req.logger.warning("warn")
+    req.logger.error("error")
+    req.logger.fatal("fatal")
+
+    res.send("Loggers")
+})
+
 router.get("/logout", (req, res) => {
     res.send("Sesion cerrada correctamente")
 })

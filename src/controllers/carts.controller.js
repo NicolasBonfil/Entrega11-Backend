@@ -15,6 +15,7 @@ class CartController{
             const response = successResponse(products)
             return res.status(HTTP_STATUS.OK).render("carts", {products})
         } catch (error){
+            req.logger.error(error.message)
             next(error)
         }
     }
@@ -22,10 +23,7 @@ class CartController{
     async createCart(req, res, next){
         try {
             const usuario = await usersModel.findOne({email: req.user.email})
-            
-            // if(usuario.cart){
-            //     return res.send({status: "error", error: "El usuario ya tiene un carrito"})
-            // }
+
             const newCart = await cartsRepository.createCart(usuario.cart)
 
             await usersModel.updateOne({email: req.user.email}, {$set: {cart: newCart}})
@@ -33,6 +31,7 @@ class CartController{
             const response = successResponse(newCart)
             res.status(HTTP_STATUS.CREATED).send(response)
         } catch (error){
+            req.logger.error(error.message)
             next(error)
         }
     }
@@ -49,6 +48,7 @@ class CartController{
             const response = successResponse(addedProduct)
             res.status(HTTP_STATUS.OK).send(response)
         } catch (error){
+            req.logger.error(error.message)
             next(error)
         }
     }
@@ -62,6 +62,7 @@ class CartController{
             const response = successResponse(removedProduct)
             res.status(HTTP_STATUS.OK).send(response)
         } catch (error){
+            req.logger.error(error.message)
             next(error)
         }
     }
@@ -76,6 +77,7 @@ class CartController{
             res.status(HTTP_STATUS.OK).send(response)
 
         } catch (error){
+            req.logger.error(error.message)
             next(error)
         }
     }
@@ -90,6 +92,7 @@ class CartController{
             const response = successResponse(updatedQuantity)
             res.status(HTTP_STATUS.OK).send(response);   
         } catch (error){
+            req.logger.error(error.message)
             next(error)
         }
     }
@@ -102,19 +105,19 @@ class CartController{
             const response = successResponse(removedProducts)
             res.status(HTTP_STATUS.OK).send(response)
         } catch (error){
+            req.logger.error(error.message)
             next(error)
         }
     }
 
     
     async finalizarCompra(req, res, next){
-
         const purchased = []
         const notPurchased = []
         
         const products = req.user.cart.productsInCart
         
-       async function filtrar(){
+        async function filtrar(){
             for(let p of products){
                 try {
                     const product = await productsRepository.getProductById(p.product)
@@ -127,6 +130,7 @@ class CartController{
                 } catch (error) {
                     return new HttpError("Error al actualizar el carrito", HTTP_STATUS.BAD_REQUEST)
                 }
+
             }
         }
 
@@ -138,18 +142,19 @@ class CartController{
         }, 0)
         
         try{
-            const user = await userModel.findOne({email: req.user.email})
-            user.cart.productsInCart = notPurchased
-            await userModel.updateOne({email: req.user.email}, user)
-
+            
             if(amount > 0){
+                const user = await userModel.findOne({email: req.user.email})
+                user.cart.productsInCart = notPurchased
+                await userModel.updateOne({email: req.user.email}, user)
+
                 const ticket = await ticketRepository.createTicket(req.user.email, amount)
                 const response = successResponse(ticket)
-                console.log(notPurchased);
 
                 return res.status(HTTP_STATUS.CREATED).send(response)
             }
         }catch (error){
+            req.logger.error(error.message)
             next(error)
         }
     }

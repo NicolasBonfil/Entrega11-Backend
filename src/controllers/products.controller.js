@@ -23,6 +23,7 @@ class ProductController{
             const response = successResponse(result)
             res.status(HTTP_STATUS.OK).send(response) 
         } catch (error) {
+            req.logger.error(error.message)
             next(error)
         }
     }
@@ -34,6 +35,7 @@ class ProductController{
             const response = successResponse(product)
             res.status(HTTP_STATUS.OK).send(response)
         } catch (error) {
+            req.logger.error(error.message)
             next(error)
         }
     }
@@ -56,6 +58,7 @@ class ProductController{
             const response = successResponse(newProduct)
             res.status(HTTP_STATUS.OK).send(response)
         } catch (error) {
+            req.logger.error(error.message)
             next(error)
         }
     }
@@ -69,6 +72,7 @@ class ProductController{
             const response = successResponse(productoActualizado)
             res.status(HTTP_STATUS.OK).send(response)
         } catch (error) {
+            req.logger.error(error.message)
             next(error)
         }
     }
@@ -80,6 +84,7 @@ class ProductController{
             const response = successResponse(productoEliminado)
             res.status(HTTP_STATUS.OK).send(response)
         } catch (error) {
+            req.logger.error(error.message)
             next(error)
         }
     }
@@ -91,6 +96,7 @@ class ProductController{
             const response = successResponse(result)
             res.status(HTTP_STATUS.OK).send(response)
         } catch (error) {
+            req.logger.error(error.message)
             next(error)
         }
     }

@@ -2,16 +2,21 @@ import mongoose from "mongoose";
 
 const ticketCollection = "ticket"
 
-let today = new Date()
+let today = new Date().toLocaleDateString()
+let time = new Date().toLocaleTimeString()
 
 const ticketSchema = new mongoose.Schema({
     code: {
         type: String,
         unique: true
     },
-    purchase_datetime:{
-        type: Date,
-        default: new Date().toLocaleTimeString()
+    purchase_date:{
+        type: String,
+        default: today
+    },
+    purchase_time:{
+        type: String,
+        default: time
     },
     amount: {
         type: Number,
